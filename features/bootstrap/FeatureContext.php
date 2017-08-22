@@ -338,5 +338,45 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 
 		$this->proc( 'wp core install', $install_args, $subdir )->run_check();
 	}
+
+	public function setup_wsuwp( $subdir = '' ) {
+		$dest_dir = $this->variables['RUN_DIR'] . "/$subdir";
+
+		if ( $subdir ) {
+			mkdir( $dest_dir );
+		}
+
+		$this->proc( Utils\esc_cmd( "cp -r %s/* %s", self::$cache_dir, $dest_dir ) )->run_check();
+
+		if ( ! is_dir( $dest_dir . '/wp-content/mu-plugins' ) ) {
+			mkdir( $dest_dir . '/wp-content/mu-plugins' );
+		}
+
+		if ( ! is_dir( $dest_dir . '/wp-content/mu-plugins/wsuwp-load-mu-plugins' ) ) {
+			mkdir( $dest_dir . '/wp-content/mu-plugins/wsuwp-load-mu-plugins' );
+		}
+
+		copy( __DIR__ . '/../extra/wsuwp-load-mu-plugins.php', $dest_dir . '/wp-content/mu-plugins/wsuwp-load-mu-plugins/wsuwp-load-mu-plugins.php' );
+
+		$wsuwp_platform_loader = 'https://github.com/washingtonstateuniversity/WSUWP-Platform/raw/master/www/wp-content/mu-plugins/index.php';
+		$wsuwp_multinetwork_plugin = 'https://github.com/washingtonstateuniversity/WSUWP-Plugin-Multiple-Networks/archive/master.zip';
+		$wsuwp_simple_filters_plugin = 'https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Simple-Filters/archive/master.zip';
+
+		$this->proc( Utils\esc_cmd(
+			'curl -sSfL %1$s > %2$s',
+			$wsuwp_platform_loader,
+			$dest_dir . 'wp-content/mu-plugins/index.php'
+		) )->run_check();
+
+		$this->proc( Utils\esc_cmd(
+			'curl -sSfL %1$s > master.zip && unzip master.zip && mv WSUWP-Plugin-Multiple-Networks-master wp-content/mu-plugins/wsuwp-multiple-networks && rm master.zip',
+			$wsuwp_multinetwork_plugin
+		) )->run_check();
+
+		$this->proc( Utils\esc_cmd(
+			'curl -sSfL %1$s > master.zip && unzip master.zip && mv WSUWP-Plugin-MU-Simple-Filters-master wp-content/mu-plugins/wsuwp-mu-simple-filters && rm master.zip',
+			$wsuwp_simple_filters_plugin
+		) )->run_check();
+	}
 }
 
