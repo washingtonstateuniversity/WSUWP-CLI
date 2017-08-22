@@ -5,7 +5,7 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 }
 
 /**
- * Says "Hello World" to new users
+ * Says "Hello World" to new users.
  *
  * @when before_wp_load
  */
