@@ -4,7 +4,10 @@
     "type": "wp-cli-package",
     "homepage": "https://github.com/washingtonstateuniversity/WSUWP-CLI",
     "license": "GPL-2.0+",
-    "authors": [ "washingtonstateuniversity", "jeremyfelt" ],
+    "authors": [ {
+        "name": "Washington State University",
+        "homepage": "https://web.wsu.edu/"
+    } ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "autoload": {
