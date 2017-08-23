@@ -27,7 +27,7 @@ class Command {
 	 * : The ID of the network the site should be created under.
 	 *
 	 * [--porcelain]
-	 * : Output just the new user id.
+	 * : Output just the new site id.
 	 *
 	 * ## EXAMPLES
 	 *
