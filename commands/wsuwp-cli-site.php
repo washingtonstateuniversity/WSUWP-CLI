@@ -17,8 +17,8 @@ class Command {
 	 * <site-url>
 	 * : The domain and path of the new site.
 	 *
-	 * <wsu-nid>
-	 * : The network ID of the first admin for the site.
+	 * <admin-email>
+	 * : The WSU email for first site administrator.
 	 *
 	 * <site-name>
 	 * : The name of the site.
@@ -43,7 +43,7 @@ class Command {
 		global $wpdb;
 		$new_site = new \stdClass;
 
-		list( $new_site->url, $new_site->nid, $new_site->name, $new_site->network ) = $args;
+		list( $new_site->url, $new_site->email, $new_site->name, $new_site->network ) = $args;
 
 		$assoc_args = wp_slash( $assoc_args );
 
@@ -83,7 +83,7 @@ class Command {
 		}
 
 
-		$user_id = email_exists( $new_site->nid );
+		$user_id = email_exists( $new_site->email );
 
 		if ( ! $user_id ) { // Create a new user with a random password
 			WP_CLI::error( 'The user does not exist.' );
