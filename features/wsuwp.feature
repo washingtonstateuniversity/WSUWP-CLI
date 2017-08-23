@@ -6,5 +6,5 @@ Feature: Test the wsuwp command
     When I run `wp wsuwp`
     Then STDOUT should contain:
       """
-      usage: wp wsuwp user <command>
+      usage: wp wsuwp
       """
