@@ -50,3 +50,7 @@ Feature: Test the wsuwp user command
 
     When I try the previous command again
     Then the return code should be 1
+    Then STDERR should contain:
+      """
+      The 'valid.user' username is already registered.
+      """
