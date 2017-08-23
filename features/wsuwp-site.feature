@@ -6,7 +6,7 @@ Feature: Test the wsuwp site command
     When I run `wp wsuwp site`
     Then STDOUT should contain:
       """
-      usage: wp wsuwp site create <site-url> <wsu-nid> <site-name> <network-id> [--porcelain]
+      usage: wp wsuwp site create <site-url> <admin-email> <site-name> <network-id> [--porcelain]
       """
 
   Scenario: A complete wsuwp site create command is issued

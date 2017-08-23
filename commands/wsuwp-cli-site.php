@@ -82,7 +82,6 @@ class Command {
 			WP_CLI::error( 'A site with this domain and path combination already exists.' );
 		}
 
-
 		$user_id = email_exists( $new_site->email );
 
 		if ( ! $user_id ) { // Create a new user with a random password
