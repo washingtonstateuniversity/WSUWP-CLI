@@ -79,9 +79,6 @@ class Command {
 			}
 			$user->ID = $user_id;
 			$user_id = wp_update_user( $user );
-			if ( is_wp_error( $user_id ) ) {
-				WP_CLI::error( $user_id );
-			}
 		} else {
 			$user_id = wp_insert_user( $user );
 		}
