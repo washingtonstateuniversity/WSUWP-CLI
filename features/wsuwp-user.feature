@@ -1,7 +1,7 @@
 Feature: Test the wsuwp user command
 
   Scenario: WSUWP user command exists
-    Given a WP multisite install
+    Given a WSUWP Platform install
 
     When I run `wp wsuwp user`
     Then STDOUT should contain:
@@ -10,7 +10,7 @@ Feature: Test the wsuwp user command
       """
 
   Scenario: Invalid emails are rejected
-    Given a WP multisite install
+    Given a WSUWP Platform install
 
     When I try `wp wsuwp user create notanemail`
     Then the return code should be 1
@@ -20,7 +20,7 @@ Feature: Test the wsuwp user command
       """
 
   Scenario: Non WSU emails are rejected
-    Given a WP multisite install
+    Given a WSUWP Platform install
 
     When I try `wp wsuwp user create user@gmail.com`
     Then the return code should be 1
@@ -30,7 +30,7 @@ Feature: Test the wsuwp user command
       """
 
   Scenario: Usernames under 3 characters are rejected
-    Given a WP multisite install
+    Given a WSUWP Platform install
 
     When I try `wp wsuwp user create ab@wsu.edu`
     Then the return code should be 1
@@ -40,7 +40,7 @@ Feature: Test the wsuwp user command
       """
 
   Scenario: Valid WSU users are created
-    Given a WP multisite install
+    Given a WSUWP Platform install
 
     When I run `wp wsuwp user create valid.user@wsu.edu`
     Then STDOUT should contain:
