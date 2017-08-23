@@ -88,6 +88,11 @@ class Command {
 			WP_CLI::error( 'The user does not exist.' );
 		}
 
+		$network = get_network( $new_site->network );
+		if ( ! $network ) {
+			WP_CLI::error( 'The network does not exist.' );
+		}
+
 		$wpdb->hide_errors();
 		$id = wpmu_create_blog( $new_site->domain, $new_site->path, $new_site->name, $user_id , array(
 			'public' => 1,

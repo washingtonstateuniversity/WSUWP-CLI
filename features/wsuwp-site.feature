@@ -54,3 +54,13 @@ Feature: Test the wsuwp site command
       """
       Invalid site path. Non standard characters were found in the path name.
       """
+
+  Scenario: A network ID that does not exist
+    Given a WSUWP Platform install
+
+    When I try `wp wsuwp site create crimsonpages.org/network-invalid wsu.admin@wsu.edu "Network invalid" 2`
+    Then the return code should be 1
+    Then STDERR should contain:
+      """
+      The network does not exist.
+      """
