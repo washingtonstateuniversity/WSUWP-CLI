@@ -40,7 +40,7 @@ if ( file_exists( __DIR__ . '/utils.php' ) ) {
  */
 class FeatureContext extends BehatContext implements ClosuredContextInterface {
 
-	private static $cache_dir, $suite_cache_dir;
+	private static $cache_dir, $suite_cache_dir, $mu_cache_dir;
 
 	private static $db_settings = array(
 		'dbname' => 'wp_cli_test',
@@ -307,10 +307,6 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		}
 
 		$this->proc( Utils\esc_cmd( "cp -r %s/* %s", self::$cache_dir, $dest_dir ) )->run_check();
-
-		// disable emailing
-		mkdir( $dest_dir . '/wp-content/mu-plugins' );
-		copy( __DIR__ . '/../extra/no-mail.php', $dest_dir . '/wp-content/mu-plugins/no-mail.php' );
 	}
 
 	public function create_config( $subdir = '' ) {
@@ -337,6 +333,58 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		);
 
 		$this->proc( 'wp core install', $install_args, $subdir )->run_check();
+	}
+
+	public function setup_wsuwp( $subdir = '' ) {
+		self::$mu_cache_dir = sys_get_temp_dir() . '/wsuwp-cli-mu-plugin-cache';
+
+		$dest_dir = $this->variables['RUN_DIR'] . "/$subdir";
+
+		if ( ! is_dir( self::$mu_cache_dir ) ) {
+			mkdir( self::$mu_cache_dir );
+		}
+
+		if ( $subdir ) {
+			mkdir( $dest_dir );
+		}
+
+		if ( ! is_dir( self::$mu_cache_dir . '/wsuwp-load-mu-plugins' ) ) {
+			mkdir( self::$mu_cache_dir . '/wsuwp-load-mu-plugins' );
+		}
+
+		copy( __DIR__ . '/../extra/wsuwp-load-mu-plugins.php', self::$mu_cache_dir . '/wsuwp-load-mu-plugins/wsuwp-load-mu-plugins.php' );
+		copy( __DIR__ . '/../extra/no-mail.php', self::$mu_cache_dir . '/no-mail.php' );
+
+		$wsuwp_platform_loader = 'https://github.com/washingtonstateuniversity/WSUWP-Platform/raw/master/www/wp-content/mu-plugins/index.php';
+		$wsuwp_multinetwork_plugin = 'https://github.com/washingtonstateuniversity/WSUWP-Plugin-Multiple-Networks/archive/master.zip';
+		$wsuwp_simple_filters_plugin = 'https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Simple-Filters/archive/master.zip';
+
+		if ( ! is_file( self::$mu_cache_dir . '/index.php' ) ) {
+			$this->proc( Utils\esc_cmd(
+				'curl -sSfL %1$s > %2$s',
+				$wsuwp_platform_loader,
+				self::$mu_cache_dir . '/index.php'
+			) )->run_check();
+		}
+
+		if ( ! is_dir( self::$mu_cache_dir . '/wsuwp-multiple-networks' ) ) {
+			$this->proc( Utils\esc_cmd(
+				'curl -sSfL %1$s > master.zip && unzip master.zip -d %2$s && mv %2$sWSUWP-Plugin-Multiple-Networks-master %2$swsuwp-multiple-networks && rm master.zip',
+				$wsuwp_multinetwork_plugin,
+				self::$mu_cache_dir . '/'
+			) )->run_check();
+		}
+
+		if ( ! is_dir( self::$mu_cache_dir . '/wsuwp-mu-simple-filters' ) ) {
+			$this->proc( Utils\esc_cmd(
+				'curl -sSfL %1$s > master.zip && unzip master.zip -d %2$s && mv %2$sWSUWP-Plugin-MU-Simple-Filters-master %2$swsuwp-mu-simple-filters && rm master.zip',
+				$wsuwp_simple_filters_plugin,
+				self::$mu_cache_dir . '/'
+			) )->run_check();
+		}
+
+		$this->proc( Utils\esc_cmd( 'mkdir -p %s', $dest_dir . 'wp-content/mu-plugins' ) )->run_check();
+		$this->proc( Utils\esc_cmd( "cp -r %s/* %s", self::$mu_cache_dir, $dest_dir . 'wp-content/mu-plugins' ) )->run_check();
 	}
 }
 
