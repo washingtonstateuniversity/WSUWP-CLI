@@ -12,7 +12,7 @@ Feature: Test the wsuwp site command
   Scenario: A complete wsuwp site create command is issued
     Given a WSUWP Platform install
 
-    When I run `wp wsuwp site create crimsonpages.org/jeremy-felt jeremy.felt@wsu.edu "Jeremy Felt's Portfolio" 1`
+    When I run `wp wsuwp site create crimsonpages.org/jeremy-felt wsu.admin@wsu.edu "Jeremy Felt's Portfolio" 1`
     Then STDOUT should contain:
       """
       Created site
@@ -22,23 +22,23 @@ Feature: Test the wsuwp site command
     Then the return code should be 1
     Then STDERR should contain:
       """
-      crimsonpages.org/jeremy-felt is already a site
+      A site with this domain and path combination already exists.
       """
 
   Scenario: A site URL with multiple paths is rejected
     Given a WSUWP Platform install
 
-    When I try `wp wsuwp site create crimsonpages.org/jeremy-felt/second jeremy.felt@wsu.edu "Site 2" 1`
+    When I try `wp wsuwp site create crimsonpages.org/jeremy-felt/second wsu.admin@wsu.edu "Site 2" 1`
     Then the return code should be 1
     Then STDERR should contain:
       """
-      A site can only have one path
+      A site can only have one path.
       """
 
   Scenario: A site URL with an invalid domain
     Given a WSUWP Platform install
 
-    When I try `wp wsuwp site create crimsonpages/jeremy-felt jeremy.felt@wsu.edu "Site Invalid" 1`
+    When I try `wp wsuwp site create crimsonpages/jeremy-felt wsu.admin@wsu.edu "Site Invalid" 1`
     Then the return code should be 1
     Then STDERR should contain:
       """
@@ -48,9 +48,9 @@ Feature: Test the wsuwp site command
   Scenario: A site URL with an invalid path
     Given a WSUWP Platform install
 
-    When I try `wp wsuwp site create crimsonpages.org/jeremy.felt jeremy.felt@wsu.edu "Site Invalid" 1`
+    When I try `wp wsuwp site create crimsonpages.org/jeremy.felt wsu.admin@wsu.edu "Site Invalid" 1`
     Then the return code should be 1
     Then STDERR should contain:
       """
-      'jeremy.felt' is not a valid path.
+      Invalid site path. Non standard characters were found in the path name.
       """
