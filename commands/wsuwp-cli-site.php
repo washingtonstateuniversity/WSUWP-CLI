@@ -114,7 +114,7 @@ class Command {
 
 Address: %2$s
 Name: %3$s' ), wp_get_current_user()->user_login , get_site_url( $id ), wp_unslash( $new_site->name ) );
-		wp_mail( get_site_option( 'admin_email' ), sprintf( __( '[%s] New Site Created' ), get_current_site()->site_name ), $content_mail, 'From: "Site Admin" <' . get_site_option( 'admin_email' ) . '>' );
+		wp_mail( get_network_option( $new_site->network, 'admin_email' ), sprintf( __( '[%s] New Site Created' ), $network->site_name ), $content_mail, 'From: "Site Admin" <' . get_network_option( $new_site->network, 'admin_email' ) . '>' );
 
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'porcelain' ) ) {
 			WP_CLI::line( $id );
