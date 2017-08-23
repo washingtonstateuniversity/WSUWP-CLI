@@ -360,7 +360,6 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		$wsuwp_simple_filters_plugin = 'https://github.com/washingtonstateuniversity/WSUWP-Plugin-MU-Simple-Filters/archive/master.zip';
 
 		if ( ! is_file( self::$mu_cache_dir . '/index.php' ) ) {
-			echo 'downloading index.php';
 			$this->proc( Utils\esc_cmd(
 				'curl -sSfL %1$s > %2$s',
 				$wsuwp_platform_loader,
@@ -369,7 +368,6 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		}
 
 		if ( ! is_dir( self::$mu_cache_dir . '/wsuwp-multiple-networks' ) ) {
-			echo 'downloading multi network';
 			$this->proc( Utils\esc_cmd(
 				'curl -sSfL %1$s > master.zip && unzip master.zip -d %2$s && mv %2$sWSUWP-Plugin-Multiple-Networks-master %2$swsuwp-multiple-networks && rm master.zip',
 				$wsuwp_multinetwork_plugin,
@@ -378,7 +376,6 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 		}
 
 		if ( ! is_dir( self::$mu_cache_dir . '/wsuwp-mu-simple-filters' ) ) {
-			echo 'downloading simple filters';
 			$this->proc( Utils\esc_cmd(
 				'curl -sSfL %1$s > master.zip && unzip master.zip -d %2$s && mv %2$sWSUWP-Plugin-MU-Simple-Filters-master %2$swsuwp-mu-simple-filters && rm master.zip',
 				$wsuwp_simple_filters_plugin,
